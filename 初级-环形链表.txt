@@ -1,0 +1,31 @@
+给定一个链表，判断链表中是否有环。
+
+进阶：
+你能否不使用额外空间解决此题？
+
+解法：每一个结点都指向第一个结点，然后若存在一个结点，它的下一个结点指向第一个结点，那么就有环。否则全部迭代完成返回无环。
+缺点：破坏链表结构，实际应用不可取。
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if(head == NULL)
+            return false;
+
+        ListNode n(0);
+        ListNode* p = &n;
+
+        while(1)
+        {
+            if(head->next == NULL)
+                return false;
+
+            if(head->next == p)
+                return true;
+
+            ListNode* temp = head;
+            head = head->next;
+            temp->next = p;
+        }
+    }
+};

@@ -1,0 +1,72 @@
+请判断一个链表是否为回文链表。
+
+示例 1:
+
+输入: 1->2
+输出: false
+示例 2:
+
+输入: 1->2->2->1
+输出: true
+进阶：
+你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+
+解法：先求出链表的大小，然后再从中间把链表前半部分翻转，得到一个新链表（注意大小的奇偶），然后两个链表开始迭代。
+缺点：会破坏链表原本的结构，若是实际应用，最后还需把链表还原，但时间复杂度仍未O(N)。
+
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        if(!head)
+            return true;
+
+        if(head->next == NULL)
+            return true;
+
+        ListNode* p;
+        int size = 0;
+        for(p = head; p; p = p->next)
+            size++;
+
+        ListNode* left, *right;
+
+        right = head;
+        if(size%2 == 0)
+            for(int i = 0; i < size/2; i++)
+                right = right->next;
+        else
+            for(int i = 0; i < size/2 + 1; i++)
+                right = right->next;
+
+        ListNode* left_head = head;
+        for(int i=0; i < size/2-1; i++)
+            left_head = left_head->next;
+
+        left = head;
+        ListNode* last = NULL;
+        p = left;
+        while(p != left_head)
+        {
+            left = left->next;
+            p->next = last;
+            last = p;
+            p = left;
+        }
+
+        left->next = last;
+
+        while(left)
+        {
+            if(left->val == right->val)
+            {
+                left = left->next;
+                right = right->next;
+            }
+            else
+                return false;
+        }
+
+        return true;
+    }
+
+};
