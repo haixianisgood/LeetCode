@@ -1,0 +1,58 @@
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+解法：先序遍历第一个为根节点，然后其在中序遍历中，该元素的左边全部为左子树的元素，右边的元素为右子树的元素。
+然后，把左子树的元素从先序遍历中拿出来，右子树也是，然后递归构造二叉树。
+
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(preorder.empty())
+            return NULL;
+
+        TreeNode* root = new TreeNode(preorder[0]);
+
+        int i;
+        for(i = 0; i < inorder.size(); i++)
+        {
+            if(preorder[0] == inorder[i])
+                break;
+        }
+
+        vector<int> leftPreorder, leftInorder;
+        for(int j = 1; j <= i; j++)
+            leftPreorder.push_back(preorder[j]);
+
+        for(int j = 0; j < i; j++)
+            leftInorder.push_back(inorder[j]);
+
+        vector<int> rightPreorder, rightInorder;
+        for(int j = i+1; j < preorder.size(); j++)
+            rightPreorder.push_back(preorder[j]);
+
+        for(int j = i+1; j < inorder.size(); j++)
+            rightInorder.push_back(inorder[j]);
+
+        //cout<<"left child"<<endl;
+        root->left = buildTree(leftPreorder, leftInorder);
+        //cout<<"right child"<<endl;
+        root->right = buildTree(rightPreorder, rightInorder);
+
+        return root;
+    }
+
+};

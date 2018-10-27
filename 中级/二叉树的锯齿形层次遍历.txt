@@ -1,0 +1,72 @@
+二叉树的锯齿形层次遍历
+给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+
+例如：
+给定二叉树 [3,9,20,null,null,15,7],
+
+   3
+  / \
+ 9  20
+   /  \
+  15   7
+返回锯齿形层次遍历如下：
+
+[
+ [3],
+ [20,9],
+ [15,7]
+]
+
+解法：建立两个栈用于层次遍历，每次遍历的结点都入栈。
+
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        TreeNode* stackA[300];
+        TreeNode* stackB[300];
+        int topA = 0;
+        int topB = 0;
+        vector<vector<int>> result;
+        if(root == NULL)
+            return result;
+
+        stackA[topA++] = root;
+        int level = 0;
+        while(topA != 0 || topB != 0)
+        {
+            level++;
+            vector<int> temp;//此处的位置很影响速度，不能放在if内
+            if(level&1)
+            {
+                while(topA)
+                {
+                    topA--;
+                    if(stackA[topA])
+                    {
+                        temp.push_back(stackA[topA]->val);
+                        stackB[topB++] = stackA[topA]->left;
+                        stackB[topB++] = stackA[topA]->right;
+                    }
+                }
+            }
+            else
+            {
+                while(topB)
+                {
+                    topB--;
+                    if(stackB[topB])
+                    {
+                        temp.push_back(stackB[topB]->val);
+                        stackA[topA++] = stackB[topB]->right;
+                        stackA[topA++] = stackB[topB]->left;
+                    }
+                }
+
+            }
+            if(!temp.empty())
+                    result.push_back(temp);
+        }
+
+        return result;
+    }
+};
